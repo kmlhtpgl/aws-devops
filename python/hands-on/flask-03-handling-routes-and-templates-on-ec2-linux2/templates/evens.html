@@ -7,8 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-    {% for x in range(0,11,2) %}
-    <li> {{ x}} </li>
+    {% for x in range(1,11) %}
+        {% if x % 2 == 0 %}
+        <li>Number {{ x }} is even</li>
+        {% endif %}    
     {% endfor %}
 </body>
 </html>

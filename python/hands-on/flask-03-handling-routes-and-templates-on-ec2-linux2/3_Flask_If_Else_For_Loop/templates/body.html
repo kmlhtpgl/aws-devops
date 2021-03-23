@@ -7,10 +7,12 @@
     <title>Document</title>
 </head>
 <body>
-    {% for x in object %}
-        <li>Hi {{ x }}</li>
-       
-{% endfor %}
-<h2>This application is created by {{developer_name}}</h2>
+    <ul>
+        {% for x in object %}
+        <li>{{x}}</li>
+        {%endfor%}
+    </ul>
+<h2>This application is created by {{ developer_name}}</h2>
+  
 </body>
 </html>
