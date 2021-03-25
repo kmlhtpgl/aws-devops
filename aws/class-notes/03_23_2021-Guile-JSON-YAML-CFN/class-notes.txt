@@ -2,17 +2,6 @@ YAML & JSON Essentials Session
 Introduction to Cloudformation
 3/23/2021
 
-Instructor: Callahan/Guile
-
-Session - 1
-
-Session starts at 7pm EST
-
-
-Break until 8pm EST
-
-Break until 9pm EST
-
 
 VS Code Extensions for YAML and Cloudformation:
 
