@@ -55,7 +55,7 @@ Kittens Carousel is a static website application deployed with Apache Web Server
 
 - Static Website Deployment
 
-- Bash scripting
+- Bash scriptingfgdgdg
 
 - AWS EC2 Service
 
