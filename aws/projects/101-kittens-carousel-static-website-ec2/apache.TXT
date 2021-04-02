@@ -1,0 +1,26 @@
+#! /bin/bash
+#update os
+yum update -y
+#install apache server
+yum install -y httpd
+
+
+systemctl start httpd
+systemctl enable httpd
+
+chmod -R 777/var/www/html
+
+
+cd /var/www/html
+
+wget https://raw.githubusercontent.com/sipahisnm/project1/master/aws-devops-project1/templates/index.html
+
+wget https://raw.githubusercontent.com/sipahisnm/project1/master/aws-devops-project1/templates/cat0.jpg
+
+wget https://raw.githubusercontent.com/sipahisnm/project1/master/aws-devops-project1/templates/cat1.jpg
+
+wget https://raw.githubusercontent.com/sipahisnm/project1/master/aws-devops-project1/templates/cat2.jpg
+
+
+
+ 
