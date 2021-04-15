@@ -36,6 +36,7 @@
 </head>
 
 <body>
+    {% if total%}
 
     <div><img src="https://clarusway.com/wp-content/uploads/2020/06/clarusway_logo.png" /></div>
 
@@ -47,8 +48,10 @@
     <p>Number <span class="result"> <b> {{ number }}</b> </span>equals to <span class="result"><b>{{ total }}</b></span> in Roman Numerals</p><br><br>
 
 
-    <p class="footnote"><i>This app is developed in Python by <b>{{ Kemal }}</b> and deployed with Flask on AWS
+    <p class="footnote"><i>This app is developed in Python by <b>Kemal</b> and deployed with Flask on AWS
             EC2 Instance using AWS Clouldformation Service.</i></p>
+    
+    {%endif%} 
 </body>
 
 </html>
