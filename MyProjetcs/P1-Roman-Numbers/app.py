@@ -10,15 +10,15 @@ def index():
 num_map = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100, 'C'), (90, 'XC'),
            (50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]
 
-def num2roman(num):
+def num2roman(number):
 
     number_roman = ''
 
-    while num > 0:
+    while number > 0:
         for i, r in num_map:
-            while num >= i:
+            while number >= i:
                 number_roman += r
-                num -= i
+                number -= i
 
     return number_roman        
 
