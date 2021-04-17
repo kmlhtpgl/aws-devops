@@ -13,8 +13,9 @@ num_map = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100, 'C'), (90, '
 def num2roman(number):
 
     number_roman = ''
+    
 
-    while number > 0:
+    if number > 0 and number < 4000:
         for i, r in num_map:
             while number >= i:
                 number_roman += r
