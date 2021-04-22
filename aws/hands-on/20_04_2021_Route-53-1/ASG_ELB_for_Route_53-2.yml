@@ -62,16 +62,31 @@ Resources:
         - !Ref AWS::Region
         - AMI
       UserData: !Base64 |
-        #! /bin/bash
-        yum update -y
-        yum install python3 -y
-        pip3 install flask
-        cd /home/ec2-user
-        FOLDER="https://raw.githubsourcecontent.com/kmlhtpgl/aws-devops/tree/main/MyProjetcs/P2-Millisecond-Convertor"
-        wget $FOLDER/app.py
-        wget $FOLDER/templates/index.html
-        wget $FOLDER/templates/result.html
-        python3 app.py
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+          TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` \
+          && PRIVATE_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4`
+          TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` \
+          && PUBLIC_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4` 
+          DATE_TIME=`date`
+          chmod -R 777 /var/www/html
+          echo "<html>
+          <head>
+              <title> Welcome to Chocolate Sea </title>
+          </head>
+          <body>
+              <h1>Welcome to Osvaldo's Chocolate Sea</h1>
+              <p>This instance is created at <b>$DATE_TIME</b></p>
+              <p>Private IP address of this instance is <b>$PRIVATE_IP</b></p>
+              <p>Public IP address of this instance is <b>$PUBLIC_IP</b></p>
+              <center><img src="ryu.jpg" alt="Welcome to Chocolate Sea"</center>
+          </body>
+          </html>" > /var/www/html/index.html
+          cd /var/www/html
+          wget https://raw.githubusercontent.com/awsdevopsteam/ngniex/master/ryu.jpg
+          systemctl start httpd
+          systemctl enable httpd
       SecurityGroups:
         - !Ref mySecurityGroup
       InstanceType: !Ref InstanceType
