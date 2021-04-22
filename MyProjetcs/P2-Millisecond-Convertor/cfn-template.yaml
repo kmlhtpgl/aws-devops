@@ -29,6 +29,26 @@ Parameters:
       - hi1.4xlarge
       - hs1.8xlarge
 Resources:
+  myAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !GetAZs 
+      LaunchConfigurationName: !Ref myLaunchConfig
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 90
+      MinSize: '1'
+      MaxSize: '3'
+      TargetGroupARNs:
+        - !Ref myALBTargetGroup
+  
+  myLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      KeyName: !Ref KeyName
+      ImageId: !FindInMap 
+        - RegionImageMap
+        - !Ref AWS::Region
+        - AMI
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
