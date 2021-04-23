@@ -61,17 +61,18 @@ Resources:
         - RegionImageMap
         - !Ref AWS::Region
         - AMI
-      UserData: !Base64 |
-        #! /bin/bash
-        yum update -y
-        yum install python3 -y
-        pip3 install flask
-        cd /home/ec2-user
-        FOLDER="https://raw.githubsourcecontent.com/kmlhtpgl/aws-devops/tree/main/MyProjetcs/P2-Millisecond-Convertor"
-        wget $FOLDER/app.py
-        wget $FOLDER/templates/index.html
-        wget $FOLDER/templates/result.html
-        python3 app.py
+      UserData: 
+        !Base64 |
+          #! /bin/bash
+          yum update -y
+          yum install python3 -y
+          pip3 install flask
+          cd /home/ec2-user
+          FOLDER="https://raw.githubsourcecontent.com/kmlhtpgl/aws-devops/tree/main/MyProjetcs/P2-Millisecond-Convertor"
+          wget $FOLDER/app.py
+          wget -p templates $FOLDER/templates/index.html
+          wget -p templates $FOLDER/templates/result.html
+          python3 app.py
       SecurityGroups:
         - !Ref mySecurityGroup
       InstanceType: !Ref InstanceType
