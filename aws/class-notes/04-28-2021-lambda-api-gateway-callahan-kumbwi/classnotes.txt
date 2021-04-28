@@ -12,7 +12,8 @@ Session starts at 3pm EST
 
 
   
-  References:
+References:
+  - https://docs.aws.amazon.com/cli/latest/reference/
   - https://editor.swagger.io
 
 

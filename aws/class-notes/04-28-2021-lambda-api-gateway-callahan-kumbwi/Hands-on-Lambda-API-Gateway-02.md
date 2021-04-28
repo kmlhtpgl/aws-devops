@@ -47,8 +47,10 @@ Block all public access     : Unchecked (Public)
 
 PS: Please, do not forget to select "US East (N.Virginia)" as Region
 ```
-- Upload files from folder part-001_website
-```
+
+- Upload files from folder `part-001_website`
+
+```text
 1. Select files
   - (all files minus css folder)
   - Click 'Next'
@@ -101,7 +103,6 @@ http://clarusway.broadcast.s3-website-us-east-1.amazonaws.com
 
 and click the sub-links and show the massages
 
-
 ## Part 2 - Creating a CORS event on S3 Bucket
 
 ![lab-002 Static Website using CORS](https://raw.githubusercontent.com/ForestTechnologiesLtd/devopsplayground11-lambda/master/diagrams/pg11-lab-002.png)
@@ -110,17 +111,17 @@ STEP 1: Upload new html files
 
 - Go to S3 bucket named "clarusway.broadcast"
 
-- Upload files from folder part-002_CORS:
+- Upload files from folder `part-002_CORS`:
   - cors.html
   - demo_text.txt
 
 - Open the Endpoint in a web browser and show CORS sub-link.
 http://clarusway.broadcast.s3-website-us-east-1.amazonaws.com
 
-- With a web browser visit the static website from Part-001 and click on the menu item 'CORS' the RED text "LAB NOT STARTED" should disappeared if not refresh the web page.
-Click on the button Get External Content. Javascript code you edited at the start of this lab has now pull text from the file demo_text.
+- With a web browser visit the static website from `Part-001` and click on the menu item `CORS` the RED text "LAB NOT STARTED" should disappeared if not refresh the web page.
+Click on the button `Get External Content`. Javascript code you edited at the start of this lab has now pull text from the file `demo_text.txt`
 
-STEP 2 : Create Second S3 Bucket for using CORS 
+STEP 2 : Create Second S3 Bucket for using CORS
 
 - Create a bucket of `clarusway.cors.broadcast` with following properties,
 
@@ -156,7 +157,7 @@ PS: Please, do not forget to select "US East (N.Virginia)" as Region
 }
 ```
 
-- Upload files from the folder Part-002_cors\cors_bucket to your new bucket "clarusway.cors.broadcast"
+- Upload files from the folder `Part-002_cors\cors_bucket` to your new bucket `clarusway.cors.broadcast`
   - cors_demo_text.txt
   - index.html
   - error.html
@@ -171,42 +172,48 @@ Index document: index.html
 Error document: error.html
 Click 'Save'
 ```
+
 - Open the Endpoint in a web browser.
 http://clarusway.cors.broadcast.s3-website-us-west-2.amazonaws.com and show that CORS option still inactive but page is running
 
+- Open `Part-002_cors\cors.html`
 
-- Open Part-002_cors\cors.html 
+- Find the "`demo_text.txt`" script in the html file
 
-- Find the "demo_text.txt" script in the html file
+- REPLACE: `demo_text.txt` WITH: http://clarusway.cors.broadcast.s3-website-us-east-1.amazonaws.com/cors_demo_text.txt (URl of the cors_demo_text.txt file in the clarusway.cors.broadcast)
 
-- REPLACE: demo_text.txt WITH: http://clarusway.cors.broadcast.s3-website-us-east-1.amazonaws.com/cors_demo_text.txt (URl of the cors_demo_text.txt file in the clarusway.cors.broadcast)
+- Upload this file to the S3 bucket named "`clarusway.broadcast`"
 
-- Upload this file to the S3 bucket named "clarusway.broadcast"
-
-- Click on the button Get External Content in  the sub-link CORS. You will notice that nothing happens or sometimes it can be raised an error.
+- Click on the button `Get External Content` in  the sub-link CORS. You will notice that nothing happens or sometimes it can be raised an error.
   
 ```text
 This occurs because web browsers expect resources to be requested from the same domain. To resolve this issue AWS S3 has a feature called CORS (Cross Origin Resource Sharing) if you enable this feature this will allow the webpage to request the content from another bucket.
 ```
 
-- With bucket clarusway.cors.broadcast enable CORS configuration, add a new policy.
+- With bucket `clarusway.cors.broadcast` enable CORS configuration, add a new policy.
   
 ```text
 Permissions > CORS configuration
 NOTE: Replace URL in <AllowedOrigin> tag with your static website link from Part-1.
 ```
 
-```bash
-<?xml version="1.0" encoding="UTF-8"?>
-<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-<CORSRule>
-    <AllowedOrigin>http://clarusway.broadcast.s3-website-us-west-2.amazonaws.com</AllowedOrigin>
-    <AllowedMethod>GET</AllowedMethod>
-    <MaxAgeSeconds>3000</MaxAgeSeconds>
-    <AllowedHeader>Authorization</AllowedHeader>
-</CORSRule>
-</CORSConfiguration>
+```json
+[
+    {
+        "AllowedHeaders": [
+            "Authorization"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "clarusway.broadcast.s3-website-us-west-2.amazonaws.com"
+        ],
+        "MaxAgeSeconds": 3000
+    }
+]
 ```
+
 - Click "Save"
 
 - Go to browser and refresh the web-page and show the CORS sub-link. 
@@ -244,10 +251,12 @@ def lambda_handler(event, context):
     print(f"Random No. [{myNumber}]")
     return myNumber
 ```
+
 - Click "DEPLOY" button
 
 - In the sub-menu of configuration go to the "Basic settings section" and click edit
-```
+
+```text
 Description : Function that generates a random number between 0 and 1000
 
 Accept Defaults for other settings
@@ -256,7 +265,7 @@ Accept Defaults for other settings
 
 STEP 2: Testing your function - Create test event
 
-Click 'Test' button and opening page Configure test events
+Click `Test` tab and opening page Configure test events
 
 ```text
 Select: Create new test event
@@ -269,8 +278,8 @@ Input test event as;
 Click 'Create'
 Click 'Test'
 ```
-You will see the message Execution result: succeeded(logs) and a random number in a box with a dotted line.
 
+You will see the message `Execution result: succeeded(logs)` and a random number in a box with a dotted line.
 
 STEP 3 : Create New 'API'
 
@@ -308,15 +317,15 @@ STEP 4 : Exposing Lambda via API Gateway
 
 - Add a `GET` method to resource `/`
   - Actions > Create Method
-  - Under the resource a drop down will appear select GET method and click the 'tick'.
+  - Under the resource a drop down will appear select GET method and click the `tick`.
 
 - Configure `GET` method to trigger Lambda function
   - Integration type: Lambda Function
   - Use Lambda Proxy integration: Leave blank
   - Lambda Region: us-east-1
   - Lambda Function: generateNumber
-  - Click 'Save'
-  - Confirm the dialog 'Add Permission to Lambda Function', Click 'OK'
+  - Click '`Save'`
+  - Confirm the dialog '`Add Permission to Lambda Function`', Click '`OK`'
 
 STEP 5: Testing Lambda via API Gateway
 
@@ -330,11 +339,11 @@ STEP 5: Testing Lambda via API Gateway
 
 STEP 6 : Deploy API
 
-- Click Resources select `/random-number`
+- Click `Resources` select `/random-number`
 
-- Select Actions and select `Deploy API`
+- Select `Actions` and select `Deploy API`
 
-```
+```text
 Deployment stage: [New Stage]
 Stage Name: dev
 Stage description: Generate Number stage
@@ -346,18 +355,17 @@ Deployment description: Part-3
 
 - Entering the Invoke URL into the web browser and add `/random-number` at the end of the URL. Show the generated random number with refreshing the page in the web browser.
 
-
 STEP 7: Implementation of the API
 
-- Open and Edit the file `apigw.html` in the Part-3 folder change the link and replace the string 'MY_API_GW_REQUEST' with the API Gateway Invoke URL e.g. "https://d3w0w4ajyh.execute-api.eu-central-1.amazonaws.com/dev"
+- Open and Edit the file `apigw.html` in the `Part-3` folder change the link and replace the string '`MY_API_GW_REQUEST`' with the API Gateway Invoke URL e.g. "https://d3w0w4ajyh.execute-api.eu-central-1.amazonaws.com/dev"
 
 - Go to S3 Bucket menu and select `clarusway.broadcast` bucket ---> Upload `apigw.html` file into the bucket.
 
 - Copy Bucket's static website Endpoint and paste it to browser. 
 
-- Show the sub-link "API Gateway" and click the button of "Get External Content" ----> It will fail.
+- Show the sub-link `API Gateway` and click the button of `Get External Content` ----> It will fail.
 
-- View Javascript in your website and you'll see message like CORS header 'Access-Control-Allow-Origin' missing.
+- View Javascript in your website and you'll see message like CORS header `Access-Control-Allow-Origin` missing.
 
 STEP 8: Active CORS on API
 
@@ -367,16 +375,16 @@ STEP 8: Active CORS on API
 
 - Click `Enable CORS and replace existing CORS headers` button and keep the rest of page as is.
 
-- Confirm dialog 'Yes, replace existing values'
+- Confirm dialog `Yes, replace existing values`
 
 - Watch the animated ticks appear on the AWS console
 
-- You need to redeploy the API; 
+- You need to redeploy the API;
   - Select / ---> Actions ---> Deploy API
-      - Development stage: dev
-      - Development description: Part-3 CORS enabled GET request
-      - Click 'Deploy'
+    - Development stage: dev
+    - Development description: Part-3 CORS enabled GET request
+    - Click 'Deploy'
 
-- Refresh the web page and go to API Gateway sub-link 
+- Refresh the web page and go to API Gateway sub-link
 
-- Press button `Get External Content` and show the random number created by Lambda function. 
+- Press button `Get External Content` and show the random number created by Lambda function.
