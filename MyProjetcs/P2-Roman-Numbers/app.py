@@ -1,38 +1,30 @@
 from flask import Flask, render_template, request
 
-app=Flask(__name__)
+app = Flask(__name__)
 
+def convert(decimal_num):
+    roman = {1000:'M', 900:'CM', 500:'D', 400:'CD', 100:'C', 90:'XC', 50:'L', 40:'XL', 10:'X', 9:'IX', 5:'V', 4:'IV', 1:'I'}
+    num_to_roman = ''
+    for i in roman.keys():
+        num_to_roman += roman[i]*(decimal_num//i)
+        decimal_num %= i 
+    return num_to_roman
 
-@app.route('/', methods=["GET"])
-def index():
-        return render_template('index.html')
+@app.route('/', methods=['POST','GET'])
+def main_post():
+    if request.method == 'POST':
+        alpha = request.form['number']
+        if not alpha.isdecimal():
+            return render_template('index.html', not_valid = True, developer_name='Kemal')
+        number = int(alpha)
+        if not 0 < number < 4000:
+            return render_template('index.html', not_valid = True, developer_name='Kemal')
+        return render_template('result.html', developer_name = 'Kemal', number_decimal = number, number_roman = convert(number))
 
-num_map = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100, 'C'), (90, 'XC'),
-           (50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]
+        
+    else:
+        return render_template('index.html', not_valid = False, developer_name = 'Kemal')
 
-def num2roman(number):
-
-    number_roman = ''
-    
-
-    if number > 0 and number < 4000:
-        for i, r in num_map:
-            while number >= i:
-                number_roman += r
-                number -= i
-
-    return number_roman        
-
-@app.route('/total',methods=["GET","POST"])
-def total():
-        if request.method=="POST":
-                number=request.form.get("number")
-                return render_template('result.html',total=num2roman(int(number)))
-        else:
-                return render_template('result.html')
-
-                
-                
-
-if __name__=='__main__':
-        app.run(host='0.0.0.0',port=80)                                
+if __name__ == '__main__':
+    # app.run(debug=True)
+    app.run(host='0.0.0.0/0', port=80)
