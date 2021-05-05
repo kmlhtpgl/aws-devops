@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Cloudformation template for milliseconds converter application. This app runs on application load balancer and is controlled by autoscaling groups.
+Parameters:
+  MyVpc:
+    Description: VPC Id of your existing accoun
+    Type: AWS::EC2::VPC:Id
+  
+Resources:
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP for ALB
+      VpcId: !Ref MyVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80 
+          ToPort: 80
+          CidrIp: 0.0.0.0
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP from ALB
+      VpcId: !Ref MyVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22 
+          ToPort: 22
+          CidrIp: 0.0.0.0
+        - IpProtocol: tcp
+          FromPort: 80 
+          ToPort: 80
+          SourceSecurityGroupId: !GetAtt ALBSecurityGroup.GroupId
+  WebServerLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-0742b4e673072066f
+        InstanceType: t2.micro
+        KeyName: Firstkey
+        SecurityGroupIds: 
+          - !GetAtt WebServerSecurityGroup.GroupId
+        TagSpecifications: 
+          - ResourceType: instance
+            Tags: 
+              - Key: Name
+                Value: !Sub Web Server of ${AWS::StackName} 
+        UserData: 
+          Fn::Base64: |
+            #! /bin/bash
+            
+            yum update -y
+            yum install python3 -y
+            pip3 install flask
+            TOKEN="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+            FOLDER="https://$TOKEN@raw.githubusercontent.com/serdarcw/Project-002-Milliseconds-Converter/master"
+            curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L $FOLDER/templates/index.html
+            curl -s --create-dirs -o "/home/ec2-user/templates/result.html" -L $FOLDER/templates/result.html
+            curl -s --create-dirs -o "/home/ec2-user/app.py" -L $FOLDER/app.py
+            python3 /home/ec2-user/app.py
+
+        
+  
+Outputs:
